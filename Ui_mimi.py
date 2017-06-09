@@ -24,21 +24,28 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+def getMoneyTypeList():
+    moneylist = config.getConfigToList('moneytype')
+    if moneylist == -1 :
+        moneylist = []
+    return moneylist
+
+def getNameList():    
+    namelist = config.getConfigToList('names')
+    if namelist == -1 :
+        namelist = []
+    return namelist
+
+def getTitleList():
+    titlelist = config.getConfigToList('titles')
+    if titlelist == -1 :
+        titlelist = []
+    return titlelist
+
 class Ui_mimi(object):
-    def getMoneyTypeList(self):
-        self.moneylist = []
-        moneylist = config.getConfigToList('moneytype')
-        if moneylist == -1 :
-            moneylist = []
-        self.moneylist = moneylist
+   
+
         
-    def getNameList(self):
-        self.namelist = []
-        namelist = config.getConfigToList('names')
-        if namelist == -1 :
-            namelist = []
-        self.namelist = namelist    
-    
     def setupUi(self, mimi):
         QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('gbk'))
         mimi.setObjectName(_fromUtf8("mimi"))
@@ -60,7 +67,7 @@ class Ui_mimi(object):
         #self.radioButton_2.setObjectName(_fromUtf8("radioButton_2"))
         #self.gridLayout.addWidget(self.radioButton_2, 1, 0, 1, 1)
         self.radioGroup_money = QtGui.QButtonGroup(self.groupBox_money) 
-        self.getMoneyTypeList()
+        self.moneylist = getMoneyTypeList()
         count = 0
         for moneytype in self.moneylist:
             try:
@@ -84,7 +91,7 @@ class Ui_mimi(object):
         self.splitter_2.setOrientation(QtCore.Qt.Vertical)
         self.splitter_2.setObjectName(_fromUtf8("splitter_2"))        
         self.radioGroup_name = QtGui.QButtonGroup(self.groupBox_name) 
-        self.getNameList()
+        self.namelist = getNameList()
         count = 0
         for name in self.namelist:
             try:
@@ -106,24 +113,17 @@ class Ui_mimi(object):
         self.textEdit_tips = QtGui.QTextEdit(self.centralwidget)
         self.textEdit_tips.setGeometry(QtCore.QRect(530, 210, 411, 81))
         self.textEdit_tips.setObjectName(_fromUtf8("textEdit_tips"))
+        
+        self.titlelist = getTitleList()
         self.tableWidget = QtGui.QTableWidget(self.centralwidget)
         self.tableWidget.setGeometry(QtCore.QRect(330, 370, 611, 371))
-        self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
-        self.tableWidget.setColumnCount(6)
-        self.tableWidget.setRowCount(0)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(0, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(1, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(2, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(3, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(4, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(5, item)        
-
+        self.tableWidget.setObjectName(_fromUtf8("tableWidget"))        
+        self.tableWidget.setColumnCount(len(self.titlelist))
+        self.tableWidget.setRowCount(0)        
+        for i in xrange(0,len(self.titlelist)):
+            item = QtGui.QTableWidgetItem()
+            self.tableWidget.setHorizontalHeaderItem(i, item)        
+            
         self.pushButton_add = QtGui.QPushButton(self.centralwidget)
         self.pushButton_add.setGeometry(QtCore.QRect(790, 300, 121, 51))
         self.pushButton_add.setObjectName(_fromUtf8("pushButton_add"))
@@ -156,24 +156,15 @@ class Ui_mimi(object):
         QtCore.QMetaObject.connectSlotsByName(mimi)
 
     def retranslateUi(self, mimi):
-        mimi.setWindowTitle(_translate("mimi", "mimi", None))
+        mimi.setWindowTitle(_translate("MiExpAccount", "MiExpAccount", None))
         self.groupBox_money.setTitle(_translate("mimi", "费用分类", None))
         self.groupBox_name.setTitle(_translate("mimi", "报销人员", None))
         self.label.setText(_translate("mimi", "附件个数：", None))
         self.label_2.setText(_translate("mimi", "备注：", None))
-
-        item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("mimi", "费用分类", None))
-        item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("mimi", "报销人员", None))
-        item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("mimi", "报销金额", None))
-        item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText(_translate("mimi", "附件张数", None))
-        item = self.tableWidget.horizontalHeaderItem(4)
-        item.setText(_translate("mimi", "备注", None))
-        item = self.tableWidget.horizontalHeaderItem(5)
-        item.setText(_translate("mimi", "日期", None))        
+        
+        for i in xrange(0,len(self.titlelist)):
+            item = self.tableWidget.horizontalHeaderItem(i)
+            item.setText(_translate("mimi", self.titlelist[i], None))            
         self.pushButton_add.setText(_translate("mimi", "添加", None))
         self.pushButton_del.setText(_translate("mimi", "删除", None))
         self.pushButton_output.setText(_translate("mimi", "导出xls", None))
