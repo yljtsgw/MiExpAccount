@@ -42,7 +42,8 @@ class excel:
             for nrow in xrange(1,nrows):
                 row_data = sheet0.row_values(nrow)
                 if len(row_data ) == 0:
-                    continue
+                    print 'line: %S ,stop read'%nrow
+                    break
                 dataList.append(row_data)
         except Exception,e:
             print e
@@ -50,7 +51,7 @@ class excel:
         return dataList      
     
     
-    def writeToXls(self,xls_path,title_list,data_list,sheet_name = '',sheet_index = 0,write_mode = 0):
+    def writeToXls(self,xls_path,title_list,data_list, sheet_name = '',sheet_index = 0,write_mode = 0):
         """暂时只支持保存至新建表格"""
     
         book = xlwt.Workbook(encoding='utf-8', style_compression=0)  
@@ -63,13 +64,34 @@ class excel:
             for col in xrange(0,len(data_list[row])):
                 sheet.write(row+1,col,data_list[row][col],self.set_style('Times New Roman',220 ))
                 print data_list[row][col]
-                currentWidth = 260 * len(data_list[row][col])* 2
+                if type(data_list[row][col])!= str:
+                    currentWidth = 3000
+                else:
+                    currentWidth = 260 * len(data_list[row][col])* 2
                 print 'currentWidth:', currentWidth
                 if sheet.col(col).width < currentWidth:
                     sheet.col(col).width = currentWidth
                 print 'sheet.col(col).width:' ,sheet.col(col).width
+
+            
         book.save(xls_path) #保存文件
         
+        
+        
+        
+    def statisticsByOneCol(self,datalist , bascol,sumcol):
+        retdatadic = {}
+        for datalinelist in datalist:
+            if  retdatadic.has_key(datalinelist[bascol]):
+                retdatadic[datalinelist[bascol]] += float(datalinelist[sumcol]) 
+            else:
+                retdatadic[datalinelist[bascol]] = float(datalinelist[sumcol]) 
+        print retdatadic
+        retdatalist = []
+        for bas in retdatadic:
+            retdatalist.append([bas,retdatadic[bas]])
+        print retdatalist
+        return retdatalist
         
 if __name__ == '__main__':
     xls_name = u'测试.xls'

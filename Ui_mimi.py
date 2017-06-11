@@ -50,6 +50,15 @@ class Ui_mimi(object):
         QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('gbk'))
         mimi.setObjectName(_fromUtf8("mimi"))
         mimi.resize(999, 839)
+        icon = QtGui.QIcon()
+        QtGui.QPixmap
+        try:            
+            icon.addPixmap(QtGui.QPixmap(_fromUtf8("./mi.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            icon.addPixmap(QtGui.QPixmap(_fromUtf8("./mi.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+            mimi.setWindowIcon(icon)
+            print " get the ico"
+        except Exception, e:
+            print e        
         self.centralwidget = QtGui.QWidget(mimi)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.groupBox_money = QtGui.QGroupBox(self.centralwidget)
